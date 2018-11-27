@@ -29,7 +29,6 @@ import school.com.schoolapplication.networkmanager.responsemodel.attendance.Stud
  */
 public class TakeAttendanceFragment extends Fragment {
     private ListView mListStudents;
-    int i;
     private static final String CLASS_ID = "studNo";
     public TakeAttendanceFragment() {
         // Required empty public constructor
