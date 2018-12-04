@@ -7,4 +7,13 @@
     <color name="cyan_800_overlay">#e600398f</color>
     <color name="grey_10">#e6e6e6</color>
     <color name="black_shade">#7d201919</color>
+
+    <color name="white">#FFF</color>
+    <color name="greyline">#D5D5D5</color>
+    <color name="greylight">#DDDDDD</color>
+    <color name="yellow">#FF9000</color>
+    <color name="yellowLight">#FFFAB0</color>
+    <color name="green">#07A508</color>
+    <color name="red">#FB000F</color>
+
 </resources>
