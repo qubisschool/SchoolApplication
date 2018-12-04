@@ -74,7 +74,7 @@ public class TakeAttendanceFragment extends Fragment {
                         if ( studentAttendanceModelList.size() < 1 )
                             goBack("d");
                     }catch ( Exception e ){
-
+//do nothing
                     }
             }
 
