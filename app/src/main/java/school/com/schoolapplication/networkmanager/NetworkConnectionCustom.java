@@ -52,4 +52,23 @@ public class NetworkConnectionCustom {
         };
         requestQueue.add( stringRequest );
     }
+    public void volleygetting(String url,
+                              Context context, final NetworkResponseCustom networkResponseCustom ){
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue( context );
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        networkResponseCustom.onSuccess( response );
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                networkResponseCustom.onError( error );
+            }
+        });
+        requestQueue.add( stringRequest );
+    }
 }

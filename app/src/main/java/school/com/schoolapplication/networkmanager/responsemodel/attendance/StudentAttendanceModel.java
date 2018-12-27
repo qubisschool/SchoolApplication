@@ -13,6 +13,25 @@ public class StudentAttendanceModel {
     @SerializedName("ID_Registration")
     private String regisrationId;
 
+    public double getMark() {
+        return mark;
+    }
+
+    public void setMark(double mark) {
+        this.mark = mark;
+    }
+
+    private double mark;
+    private boolean isPresent = false;
+
+    public boolean isPresent() {
+        return isPresent;
+    }
+
+    public void setPresent(boolean present) {
+        isPresent = present;
+    }
+
     public String getRegisrationId() {
         return regisrationId;
     }

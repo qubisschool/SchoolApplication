@@ -5,10 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -27,16 +31,20 @@ import school.com.schoolapplication.networkmanager.responsemodel.attendance.Stud
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TakeAttendanceFragment extends Fragment {
-    private ListView mListStudents;
+public class TakeAttendanceFragment extends Fragment implements View.OnClickListener {
+    private AttendanceTakerRecyclerAdapter attendanceTakerRecyclerAdapter;
+    private RecyclerView mRecyListSudents;
     private static final String CLASS_ID = "studNo";
+    private static final String DIVISION = "DIV";
+    private TextView mTxtPresentCount, mTxtAbsentCount;
     public TakeAttendanceFragment() {
         // Required empty public constructor
     }
-    public static TakeAttendanceFragment getInstance(String classId){
+    public static TakeAttendanceFragment getInstance(String classId, String division){
         TakeAttendanceFragment takeAttendanceFragment = new TakeAttendanceFragment();
         Bundle bundle = new Bundle();
         bundle.putString(CLASS_ID, classId );
+        bundle.putString( DIVISION, division );
         takeAttendanceFragment.setArguments( bundle );
         return takeAttendanceFragment;
     }
@@ -48,19 +56,43 @@ public class TakeAttendanceFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_take_attendance, container, false);
         Bundle bundle = getArguments();
         String classId = bundle.getString(CLASS_ID);
+        String div       = bundle.getString( DIVISION );
         try{
             if ( !classId.isEmpty() )
-                getStudentList( classId );
+                getStudentList( classId, div );
         }catch ( Exception e ){
             //Do nothing
         }
-        mListStudents = view.findViewById( R.id.list_students );
+        mTxtPresentCount = view.findViewById( R.id.txt_total_present );
+        mTxtAbsentCount = view.findViewById( R.id.txt_total_absent );
+        mRecyListSudents = view.findViewById( R.id.recycler_attendance_marker );
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        mRecyListSudents.setLayoutManager( layoutManager );
+        mRecyListSudents.setItemAnimator( new DefaultItemAnimator() );
+
+        view.findViewById( R.id.btn_present_all ).setOnClickListener( this );
+        view.findViewById( R.id.btn_absent_all ).setOnClickListener( this );
+
         return view;
     }
-    private void getStudentList(final String classId ){
+    @Override
+    public void onClick( View view ){
+        int id = view.getId();
+        if ( id == R.id.btn_present_all ){
+            if ( attendanceTakerRecyclerAdapter != null ){
+                attendanceTakerRecyclerAdapter.markAll( true );
+            }
+        }else if ( id == R.id.btn_absent_all ){
+            if ( attendanceTakerRecyclerAdapter != null ){
+                attendanceTakerRecyclerAdapter.markAll( false );
+            }
+        }
+    }
+    private void getStudentList(final String classId, final String div ){
         String url = "http://test.qubisapps.com/api/Student/listStudents";
         Map<String,String > param = new HashMap<>();
-        param.put("ID_ClassDetails", classId );
+        param.put("ID_Class", classId );
+        param.put("Division", div );
         NetworkConnectionCustom.getInstance().volleyPosting(url, param, getContext(), new NetworkResponseCustom() {
             @Override
             public void onSuccess(String response) {
@@ -69,10 +101,19 @@ public class TakeAttendanceFragment extends Fragment {
                                 new Gson().fromJson( response, AttendInfoParent.class );
                         List<StudentAttendanceModel> studentAttendanceModelList = attendInfoParent.getAttendanceInfo().
                                 getStudentAttendanceModelList();
-                        TakeAttendanceListAdapter takeAttendanceListAdapter = new TakeAttendanceListAdapter( studentAttendanceModelList, getContext());
-                        mListStudents.setAdapter( takeAttendanceListAdapter );
+                        attendanceTakerRecyclerAdapter = new AttendanceTakerRecyclerAdapter(
+                                studentAttendanceModelList, getContext(), new AttendanceTakerRecyclerAdapter.Marker() {
+                            @Override
+                            public void mark(int present, int absent) {
+                                mTxtPresentCount.setText( Integer.toString(present) );
+                                mTxtAbsentCount.setText( Integer.toString( absent ) );
+                            }
+                        }
+                        );
+                        mRecyListSudents.setAdapter( attendanceTakerRecyclerAdapter );
+
                         if ( studentAttendanceModelList.size() < 1 )
-                            goBack("d");
+                            goBack("d","");
                     }catch ( Exception e ){
 //do nothing
                     }
@@ -81,15 +122,15 @@ public class TakeAttendanceFragment extends Fragment {
             @Override
             public void onError(VolleyError error) {
                 Toast.makeText( getContext(), "Internal server error occured", Toast.LENGTH_SHORT ).show();
-                goBack(classId);
+                goBack(classId, div);
             }
         });
     }
-    private void goBack(String classId){
+    private void goBack(String classId, String div){
         Toast.makeText(getContext(), "No students found on this class", Toast.LENGTH_SHORT).show();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.remove( TakeAttendanceFragment.getInstance( classId) );
+        fragmentTransaction.remove( TakeAttendanceFragment.getInstance( classId, div) );
         fragmentTransaction.commit();
         fragmentManager.popBackStack();
 

@@ -15,24 +15,24 @@ import school.com.schoolapplication.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AttendanceHomeFragment extends Fragment implements View.OnClickListener{
+public class TeacherAttendanceHomeFragment extends Fragment implements View.OnClickListener{
 
     private Button mBtnNewAttndance;
-    public AttendanceHomeFragment() {
+    public TeacherAttendanceHomeFragment() {
         // Required empty public constructor
     }
 
-    public static AttendanceHomeFragment newInstance(){
-        AttendanceHomeFragment attendanceHomeFragment = new AttendanceHomeFragment();
+    public static TeacherAttendanceHomeFragment newInstance(){
+        TeacherAttendanceHomeFragment teacherAttendanceHomeFragment = new TeacherAttendanceHomeFragment();
 
-        return attendanceHomeFragment;
+        return teacherAttendanceHomeFragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_attendance_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_attendance_home_teacher, container, false);
         mBtnNewAttndance = view.findViewById( R.id.btn_new );
         mBtnNewAttndance.setOnClickListener( this );
         return view;

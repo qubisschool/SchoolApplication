@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".home.mark.AddMarkFragment"
+    android:background="@drawable/blue_backgrouond">
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add mark here"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:gravity="center_horizontal"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"/>
+    <Button
+        android:id="@+id/submit"
+        android:background="@drawable/white_border"
+        android:textColor="@color/white"
+        android:text="Submit"
+        android:textAllCaps="false"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+   <android.support.v7.widget.RecyclerView
+       android:id="@+id/recy_add_mark"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_below="@id/header"
+       android:layout_above="@id/submit"
+       android:layout_margin="5dp">
+
+   </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import school.com.schoolapplication.R;
 import school.com.schoolapplication.networkmanager.NetworkConnectionCustom;
@@ -71,9 +72,11 @@ public class SelectClassFragment extends Fragment implements View.OnClickListene
         return view;
     }
     private void getData(){
-        String url = " http://test.qubisapps.com/api/Student/listDivisions";
+        String url = "http://test.qubisapps.com/api/Student/listDivisions";
         mRltvLoader.setVisibility( View.VISIBLE );
-        NetworkConnectionCustom.getInstance().volleyPosting(url, new HashMap<String, String>(), getContext(), new NetworkResponseCustom() {
+        Map<String,String> param = new HashMap<>();
+        param.put("ss","sd");
+        NetworkConnectionCustom.getInstance().volleyPosting(url, param, getContext(), new NetworkResponseCustom() {
             @Override
             public void onSuccess(String response) {
                 try{
@@ -124,7 +127,7 @@ public class SelectClassFragment extends Fragment implements View.OnClickListene
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.add( R.id.frame_home_container,
-                    TakeAttendanceFragment.getInstance( mDivisionModelSelected.getClassDetailsId() ) )
+                    TakeAttendanceFragment.getInstance( mDivisionModelSelected.getClassDetailsId(), mDivisionModelSelected.getDivision() ) )
             .addToBackStack("attendancee");
             fragmentTransaction.commit();
             //fragmentManager.popBackStack();
